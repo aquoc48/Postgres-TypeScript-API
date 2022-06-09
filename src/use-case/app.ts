@@ -4,13 +4,16 @@ import _ from '../functions/app';
 
 import addUser from './createUser';
 import readUser from './readUser';
+import deleteUser from './deleteUser';
 
 const addUsers = addUser(entity.makeUsers, userDB);
 const readUsers = readUser(userDB, _.dec);
+const deleteUsers = deleteUser(userDB);
 
 const userUC = {
     addUsers,
-    readUsers
+    readUsers,
+    deleteUsers
 };
 
 export default userUC;

@@ -1,4 +1,4 @@
-const userRead = (readUsers: Function) => {
+const userDelete = (deleteUsers: Function) => {
     return async function get(httpRequest: any) {
         const headers = {
             'Content-Type': 'application/json'
@@ -11,14 +11,14 @@ const userRead = (readUsers: Function) => {
             if (httpRequest.headers['Referer']) {
                 source.referer = httpRequest.headers['Referer'];
             }
-            const toView = {
+            const toRemove = {
                 ...info,
                 source,
                 id: httpRequest.params.id // if id is passed in params
                 // limit: httpRequest.params.limit,
                 // offset: httpRequest.params.offset
             };
-            const view = await readUsers(toView);
+            const view = await deleteUsers(toRemove);
             return {
                 headers: {
                     'Content-Type': 'application/json'
@@ -39,4 +39,4 @@ const userRead = (readUsers: Function) => {
     };
 };
 
-export default userRead;
+export default userDelete;

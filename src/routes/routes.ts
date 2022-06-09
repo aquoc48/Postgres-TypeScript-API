@@ -6,6 +6,8 @@ const route = (router: any, makeExpressCallback: Function, validateAuth: Functio
     router.get('/', validateAuth, makeExpressCallback(userController.userReads));
     router.get('/:id', validateAuth, makeExpressCallback(userController.userReads));
 
+    router.delete('/:id', validateAuth, makeExpressCallback(userController.userDeletes));
+
     return router;
 };
 

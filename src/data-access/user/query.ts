@@ -3,7 +3,8 @@ const query = (conn: any, models: any) => {
         createUser,
         checkEmailExist,
         selectOne,
-        selectAll
+        selectAll,
+        deleteUser
     });
 
     async function checkEmailExist(data: any) {
@@ -61,22 +62,44 @@ const query = (conn: any, models: any) => {
     }
 
     async function selectAll() {
+        //limit: number, offset: number
         try {
             const pool = await conn();
 
             const res = await new Promise((resolve) => {
                 const sql = `SELECT * FROM "Users";`;
-                pool.query(sql, (err: Error, res: Response) => {
-                    pool.end();
+                // LIMIT ${limit} OFFSET ${offset}
+                // const params = [limit, offset];
+                pool.query(
+                    sql,
+                    //  params,
+                    (err: Error, res: Response) => {
+                        pool.end();
 
-                    if (err) resolve(err);
-                    resolve(res);
-                });
+                        if (err) resolve(err);
+                        resolve(res);
+                    }
+                );
             });
 
             return res;
         } catch (e) {
             console.log('Error: ', e);
+        }
+    }
+
+    async function deleteUser(id: string) {
+        try {
+            // user sequelize
+            const User = models.User;
+            const res = await User.destroy({
+                where: {
+                    id
+                }
+            });
+            return res;
+        } catch (e) {
+            console.log('error: ', e);
         }
     }
 };

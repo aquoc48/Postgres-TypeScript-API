@@ -1,7 +1,9 @@
 const query = (conn: any, models: any) => {
     return Object.freeze({
         createUser,
-        checkEmailExist
+        checkEmailExist,
+        selectOne,
+        selectAll
     });
 
     async function checkEmailExist(data: any) {
@@ -34,6 +36,47 @@ const query = (conn: any, models: any) => {
             return user;
         } catch (e) {
             console.log('error:', e);
+        }
+    }
+
+    async function selectOne(id: number) {
+        try {
+            const pool = await conn();
+
+            const res = await new Promise((resolve) => {
+                const sql = `SELECT * FROM "Users" WHERE id = $1;`;
+                const params = [id];
+                pool.query(sql, params, (err: Error, res: Response) => {
+                    pool.end();
+
+                    if (err) resolve(err);
+                    resolve(res);
+                });
+            });
+
+            return res;
+        } catch (e) {
+            console.log('Error: ', e);
+        }
+    }
+
+    async function selectAll() {
+        try {
+            const pool = await conn();
+
+            const res = await new Promise((resolve) => {
+                const sql = `SELECT * FROM "Users";`;
+                pool.query(sql, (err: Error, res: Response) => {
+                    pool.end();
+
+                    if (err) resolve(err);
+                    resolve(res);
+                });
+            });
+
+            return res;
+        } catch (e) {
+            console.log('Error: ', e);
         }
     }
 };

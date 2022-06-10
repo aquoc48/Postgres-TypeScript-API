@@ -1,11 +1,14 @@
-import _ from "../functions/app";
+import _ from '../functions/app';
 
-import makeUser from "./make-user";
+import makeUser from './make-user';
+import putUser from './put-user';
 
 const makeUsers = makeUser(_.enc);
+const putUsers = putUser(_.enc);
 
 const entity = {
-  makeUsers,
+    makeUsers,
+    putUsers
 };
 
 export default entity;

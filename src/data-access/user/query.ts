@@ -4,7 +4,9 @@ const query = (conn: any, models: any) => {
         checkEmailExist,
         selectOne,
         selectAll,
-        deleteUser
+        deleteUser,
+        checkEmailExistUpdate,
+        putUser
     });
 
     async function checkEmailExist(data: any) {
@@ -14,7 +16,7 @@ const query = (conn: any, models: any) => {
             const { email } = data;
 
             const res = await new Promise((resolve) => {
-                const sql = `SELECT id FROM "Users" WHERE "email" = $2;`;
+                const sql = `SELECT id FROM "Users" WHERE "email" = $1;`;
                 const params = [email];
                 pool.query(sql, params, (err: Error, res: Response) => {
                     pool.end();
@@ -97,6 +99,51 @@ const query = (conn: any, models: any) => {
                     id
                 }
             });
+            return res;
+        } catch (e) {
+            console.log('error: ', e);
+        }
+    }
+
+    async function checkEmailExistUpdate(data: any) {
+        try {
+            const pool = await conn();
+
+            const { id, email } = data;
+
+            const res = await new Promise((resolve) => {
+                const sql = `SELECT id FROM "Users" WHERE "email" = $2 AND id <> $1;`;
+                const params = [id, email];
+                pool.query(sql, params, (err: Error, res: Response) => {
+                    pool.end();
+
+                    if (err) resolve(err);
+                    resolve(res);
+                });
+            });
+
+            return res;
+        } catch (e) {
+            console.log('Error: ', e);
+        }
+    }
+
+    async function putUser(data: any) {
+        try {
+            //use sequelize on update
+            const User = models.User;
+            const res = await User.update(
+                {
+                    name: data.name,
+                    email: data.email,
+                    password: data.password
+                },
+                {
+                    where: {
+                        id: data.id
+                    }
+                }
+            );
             return res;
         } catch (e) {
             console.log('error: ', e);

@@ -8,6 +8,8 @@ const route = (router: any, makeExpressCallback: Function, validateAuth: Functio
 
     router.delete('/:id', validateAuth, makeExpressCallback(userController.userDeletes));
 
+    router.put('/:id', validateAuth, makeExpressCallback(userController.userUpdates));
+
     return router;
 };
 

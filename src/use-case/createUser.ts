@@ -9,6 +9,8 @@ const addUser = (makeUsers: Function, userDB: any) => {
         };
 
         const check = await userDB.checkEmailExist(data);
+        // rowCount from node-postgres package
+        // check to see all rows affected by the select query
         if (check.rowCount > 0) throw new Error(`User already existed.`);
 
         const res = await userDB.createUser(data);

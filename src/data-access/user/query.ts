@@ -16,6 +16,7 @@ const query = (conn: any, models: any) => {
             const { email } = data;
 
             const res = await new Promise((resolve) => {
+                // select the user with the email passed as data
                 const sql = `SELECT id FROM "Users" WHERE "email" = $1;`;
                 const params = [email];
                 pool.query(sql, params, (err: Error, res: Response) => {
@@ -63,25 +64,20 @@ const query = (conn: any, models: any) => {
         }
     }
 
-    async function selectAll() {
-        //limit: number, offset: number
+    async function selectAll(limit: number, offset: number) {
         try {
             const pool = await conn();
 
             const res = await new Promise((resolve) => {
                 const sql = `SELECT * FROM "Users";`;
-                // LIMIT ${limit} OFFSET ${offset}
-                // const params = [limit, offset];
-                pool.query(
-                    sql,
-                    //  params,
-                    (err: Error, res: Response) => {
-                        pool.end();
+                // LIMIT n OFFSET m
+                // const query = [limit, offset];
+                pool.query(sql, (err: Error, res: Response) => {
+                    pool.end();
 
-                        if (err) resolve(err);
-                        resolve(res);
-                    }
-                );
+                    if (err) resolve(err);
+                    resolve(res);
+                });
             });
 
             return res;
@@ -112,6 +108,7 @@ const query = (conn: any, models: any) => {
             const { id, email } = data;
 
             const res = await new Promise((resolve) => {
+                // find user with email === body.email and id != params.id, to check if email already existed on a user with different id
                 const sql = `SELECT id FROM "Users" WHERE "email" = $2 AND id <> $1;`;
                 const params = [id, email];
                 pool.query(sql, params, (err: Error, res: Response) => {

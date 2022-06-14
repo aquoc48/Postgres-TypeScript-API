@@ -14,9 +14,9 @@ const userRead = (readUsers: Function) => {
             const toView = {
                 ...info,
                 source,
-                id: httpRequest.params.id // if id is passed in params
-                // limit: httpRequest.params.limit,
-                // offset: httpRequest.params.offset
+                id: httpRequest.params.id, // if id is passed in params
+                limit: httpRequest.query.limit,
+                offset: httpRequest.query.offset
             };
             const view = await readUsers(toView);
             return {

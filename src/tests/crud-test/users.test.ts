@@ -1,9 +1,10 @@
-import randomstring from 'randomstring';
+// import randomstring from 'randomstring';
 import route from './users';
 
 describe(`user crud tests`, () => {
     test(`get user`, async () => {
         const res: any = await route.selectUser();
+        console.log(res);
         const data = res.status;
         expect(data).toBe(200);
     });

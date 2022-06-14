@@ -1,7 +1,7 @@
 const readUser = (userDB: any, decrypt: Function) => {
     return async function read(info: any) {
         let data = [];
-        const { id } = info;
+        const { id, limit, offset } = info;
 
         if (id) {
             //select one with id
@@ -23,7 +23,7 @@ const readUser = (userDB: any, decrypt: Function) => {
             }
         } else {
             //select all
-            const res = await userDB.selectAll();
+            const res = await userDB.selectAll(limit, offset);
             if (res.rowCount > 0) {
                 const items = res.rows;
                 for (let i = 0; i < items.length; i++) {

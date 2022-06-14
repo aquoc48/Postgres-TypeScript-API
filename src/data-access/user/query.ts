@@ -37,6 +37,7 @@ const query = (conn: any, models: any) => {
         try {
             const User = models.User;
             const user = await User.create(data);
+            console.log(user);
             return user;
         } catch (e) {
             console.log('error:', e);
@@ -57,6 +58,7 @@ const query = (conn: any, models: any) => {
                     resolve(res);
                 });
             });
+            // console.log(res);
 
             return res;
         } catch (e) {
@@ -64,22 +66,22 @@ const query = (conn: any, models: any) => {
         }
     }
 
-    async function selectAll(limit: number, offset: number) {
+    async function selectAll(limit?: number, offset?: number) {
         try {
             const pool = await conn();
 
             const res = await new Promise((resolve) => {
-                const sql = `SELECT * FROM "Users";`;
+                const sql = `SELECT * FROM "Users" LIMIT $1 OFFSET $2;`;
                 // LIMIT n OFFSET m
-                // const query = [limit, offset];
-                pool.query(sql, (err: Error, res: Response) => {
+                const query = [limit, offset];
+                pool.query(sql, query, (err: Error, res: Response) => {
                     pool.end();
 
                     if (err) resolve(err);
                     resolve(res);
                 });
             });
-
+            //console.log(res);
             return res;
         } catch (e) {
             console.log('Error: ', e);

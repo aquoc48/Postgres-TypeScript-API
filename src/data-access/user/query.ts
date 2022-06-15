@@ -6,7 +6,8 @@ const query = (conn: any, models: any) => {
         selectAll,
         deleteUser,
         checkEmailExistUpdate,
-        putUser
+        putUser,
+        checkRootExist
     });
 
     async function checkEmailExist(data: any) {
@@ -66,23 +67,28 @@ const query = (conn: any, models: any) => {
         }
     }
 
-    async function selectAll(limit?: number, offset?: number) {
+    async function selectAll(page: number) {
         try {
             const pool = await conn();
 
-            const res = await new Promise((resolve) => {
-                const sql = `SELECT * FROM "Users" LIMIT $1 OFFSET $2;`;
-                // LIMIT n OFFSET m
-                const query = [limit, offset];
-                pool.query(sql, query, (err: Error, res: Response) => {
-                    pool.end();
+            const limit = 10;
+            if (page >= 1) {
+                const offset = (page - 1) * limit;
+                const res = await new Promise((resolve) => {
+                    const sql = `SELECT * FROM "Users" LIMIT ${limit} OFFSET ${offset};`;
+                    pool.query(sql, (err: Error, res: Response) => {
+                        pool.end();
 
-                    if (err) resolve(err);
-                    resolve(res);
+                        if (err) resolve(err);
+                        resolve(res);
+                    });
                 });
-            });
-            //console.log(res);
-            return res;
+                console.log(res);
+                return res;
+            } else if (page < 1) {
+                alert('page cannot be lower than 1');
+                console.log('page cannot be lower than 1');
+            }
         } catch (e) {
             console.log('Error: ', e);
         }
@@ -146,6 +152,30 @@ const query = (conn: any, models: any) => {
             return res;
         } catch (e) {
             console.log('error: ', e);
+        }
+    }
+
+    async function checkRootExist(data: any) {
+        try {
+            const pool = await conn();
+
+            const { id } = data;
+
+            const res = await new Promise((resolve) => {
+                // select the user with root role and id=9
+                const sql = `SELECT id FROM "Users" WHERE "role" = 'root' AND id <> $1 ;`;
+                const params = [id];
+                pool.query(sql, params, (err: Error, res: Response) => {
+                    pool.end();
+
+                    if (err) resolve(err);
+                    resolve(res);
+                });
+            });
+
+            return res;
+        } catch (e) {
+            console.log('Error: ', e);
         }
     }
 };

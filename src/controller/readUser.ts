@@ -14,18 +14,35 @@ const userRead = (readUsers: Function) => {
             const toView = {
                 ...info,
                 source,
-                id: httpRequest.params.id, // if id is passed in params
-                limit: httpRequest.query.limit,
-                offset: httpRequest.query.offset
+                id: httpRequest.params.id, // if id is passed in param
+                page: httpRequest.query.page
             };
-            const view = await readUsers(toView);
-            return {
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                statusCode: 200,
-                body: { view }
-            };
+            // const view = await readUsers(toView);
+            // return {
+            //     headers: {
+            //         'Content-Type': 'application/json'
+            //     },
+            //     statusCode: 200,
+            //     body: { view }
+            // };
+            if (toView.page < 1) {
+                return {
+                    headers,
+                    statusCode: 400,
+                    body: {
+                        error: 'page cannot be lower than 1'
+                    }
+                };
+            } else if (toView.page >= 1) {
+                const view = await readUsers(toView);
+                return {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    statusCode: 200,
+                    body: { view }
+                };
+            }
         } catch (e: any) {
             console.log(e);
             return {

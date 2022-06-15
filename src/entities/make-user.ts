@@ -1,6 +1,6 @@
 const makeUser = (encrypt: Function) => {
     return function make(info: any) {
-        const { name, email, password } = info;
+        const { name, email, password, role } = info;
         if (!name) {
             throw new Error('Please enter name.');
         }
@@ -17,7 +17,10 @@ const makeUser = (encrypt: Function) => {
             getEmail: () => {
                 return email;
             },
-            getPassword: () => encrypt([password])
+            getPassword: () => encrypt([password]),
+            getRole: () => {
+                return role;
+            }
         });
     };
 };

@@ -11,20 +11,14 @@ const userRead = (readUsers: Function) => {
             if (httpRequest.headers['Referer']) {
                 source.referer = httpRequest.headers['Referer'];
             }
+
             const toView = {
                 ...info,
                 source,
                 id: httpRequest.params.id, // if id is passed in param
-                page: httpRequest.query.page
+                page: httpRequest.query.page! || 1
             };
-            // const view = await readUsers(toView);
-            // return {
-            //     headers: {
-            //         'Content-Type': 'application/json'
-            //     },
-            //     statusCode: 200,
-            //     body: { view }
-            // };
+
             if (toView.page < 1) {
                 return {
                     headers,

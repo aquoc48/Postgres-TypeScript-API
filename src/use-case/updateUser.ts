@@ -22,6 +22,8 @@ const updateUser = (putUsers: Function, userDB: any) => {
 
         let msg = `User update failed`;
         if (res[0] == 1) {
+            // sequelize update function returns the number of updated rows, res[0] ==1 means 1 row udpated
+            // console.log('____________________res 0 = ', res[0]);
             msg = `User updated successfully`;
             return msg;
         } else {

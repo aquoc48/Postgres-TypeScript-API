@@ -5,12 +5,14 @@ const addUser = (makeUsers: Function, userDB: any) => {
         data = {
             name: data.getName(),
             email: data.getEmail(),
-            password: data.getPassword(),
-            role: data.getRole()
+            password: data.getPassword()
+            // role: data.getRole()
         };
+        // console.log(data.email);
 
         const check = await userDB.checkEmailExist(data);
         // rowCount from node-postgres package
+        // console.log(check.email);
         // check to see if email existed on user with different id or not
         if (check.rowCount > 0) throw new Error(`User already existed.`);
 

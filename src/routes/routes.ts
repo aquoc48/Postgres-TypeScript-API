@@ -10,6 +10,7 @@ const route = (router: any, makeExpressCallback: Function, validateAuth: Functio
 
     router.put('/:id', validateAuth, makeExpressCallback(userController.userUpdates));
 
+    router.post('/login', validateAuth, makeExpressCallback(userController.userLogins));
     return router;
 };
 

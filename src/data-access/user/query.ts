@@ -7,7 +7,8 @@ const query = (conn: any, models: any) => {
         deleteUser,
         checkEmailExistUpdate,
         putUser,
-        checkRootExist
+        checkRootExist,
+        checkEmailExistLogin
     });
 
     async function checkEmailExist(data: any) {
@@ -27,7 +28,7 @@ const query = (conn: any, models: any) => {
                     resolve(res);
                 });
             });
-
+            // console.log(res);
             return res;
         } catch (e) {
             console.log('Error: ', e);
@@ -72,23 +73,18 @@ const query = (conn: any, models: any) => {
             const pool = await conn();
 
             const limit = 10;
-            if (page >= 1) {
-                const offset = (page - 1) * limit;
-                const res = await new Promise((resolve) => {
-                    const sql = `SELECT * FROM "Users" LIMIT ${limit} OFFSET ${offset};`;
-                    pool.query(sql, (err: Error, res: Response) => {
-                        pool.end();
+            const offset = (page - 1) * limit;
 
-                        if (err) resolve(err);
-                        resolve(res);
-                    });
+            const res = await new Promise((resolve) => {
+                const sql = `SELECT * FROM "Users" LIMIT ${limit} OFFSET ${offset};`;
+                pool.query(sql, (err: Error, res: Response) => {
+                    pool.end();
+
+                    if (err) resolve(err);
+                    resolve(res);
                 });
-                console.log(res);
-                return res;
-            } else if (page < 1) {
-                alert('page cannot be lower than 1');
-                console.log('page cannot be lower than 1');
-            }
+            });
+            return res;
         } catch (e) {
             console.log('Error: ', e);
         }
@@ -149,6 +145,9 @@ const query = (conn: any, models: any) => {
                     }
                 }
             );
+
+            // console.log(res);
+
             return res;
         } catch (e) {
             console.log('error: ', e);
@@ -173,6 +172,30 @@ const query = (conn: any, models: any) => {
                 });
             });
 
+            return res;
+        } catch (e) {
+            console.log('Error: ', e);
+        }
+    }
+
+    async function checkEmailExistLogin(data: any) {
+        try {
+            const pool = await conn();
+
+            const { email } = data;
+
+            const res = await new Promise((resolve) => {
+                // select the user with the email passed as data
+                const sql = `SELECT * FROM "Users" WHERE "email" = $1;`;
+                const params = [email];
+                pool.query(sql, params, (err: Error, res: Response) => {
+                    pool.end();
+
+                    if (err) resolve(err);
+                    resolve(res);
+                });
+            });
+            // console.log(res);
             return res;
         } catch (e) {
             console.log('Error: ', e);
